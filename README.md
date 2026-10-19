@@ -3,6 +3,9 @@
 Analysis code for the preprint *Perturbations change which cells are measured in single-cell CRISPR screens*
 (Xuanrui Huang, National University of Singapore).
 
+The version used for the preprint, 1.0.0, is archived on Zenodo: https://doi.org/10.5281/zenodo.23480448 (all
+versions: https://doi.org/10.5281/zenodo.23480447).
+
 The repository has two parts:
 
 - **`escape_fraction/`**: a small standalone tool that estimates, for each perturbation, the fraction *e* of measured
