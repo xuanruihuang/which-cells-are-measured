@@ -58,6 +58,33 @@ The worked example was also run with `expected` columns instead of `library` (sa
 `fate_orion_matched*.py`, `fate_k562_repeat.py`, `fate_selection_check.py` and `orion_extract.py` were copied into this
 repository on 2026-10-20 with only their paths and imports changed (server `sys.path` inserts removed; fixed locations
 read through `config.py`; `orion_extract.py` takes its gene sets from `strata.py`, whose lists are identical to those it
-imported). They have not been rerun from this repository. Their stored outputs are the inputs of the figure scripts,
-and `plot_fate_figs_v6.py` and `plot_fate_supp_v6.py` run from this repository redrew Figures 1–5 and Supplementary
-Figures S1–S8 identically (PNG pixel-identical; PDF identical apart from the creation date).
+imported). On 2026-10-20 each was rerun from this repository (commit 7a2e0e9) on the server where its data sit, with
+the arguments of the original run and a new output folder, and compared with the output the paper's numbers were
+taken from: JSON with `compare_json.py`, arrays with an element-by-element comparison (relative tolerance 10⁻⁹).
+
+| Item | Script rerun | Values compared | Result |
+|---|---|---|---|
+| Fig. 2d, e; silenced level; e against dependency | `fate_rev_mixture.py` | 6,062 | identical |
+| Fig. 3a–c | `fate_rev_dilution.py` | 312, and every array of the point file | identical |
+| Fig. 4b, e, f; Supplementary Table S2b | `fate_rev_samescale.py` | 4,036 | identical |
+| Fig. 4, matched-set selection | `fate_selection_check.py` | 330 | identical |
+| Mixed classification control | `pan_extract_mixnull.py` (every array and the index) → `fate_rev_mixnull.py` | 1,807 | identical |
+| Fig. 5a, direction; Orion matched difference | `fate_rev_dir_orion.py` | 51 | identical |
+| Fig. 5b, symmetric composition share | `fate_rev_comp.py`, K562 / RPE1 / hESC and Jurkat / HepG2 (two servers) | 192 + 128 | identical |
+| Composition by pluripotency state | `pan_extract_state.py` (every array and the index) → `fate_rev_state.py`, on the stored and on the re-extracted arrays | 22,644 each | identical |
+| Fig. 3c, K562 with two independent screens | `fate_k562_repeat.py` | 2,372 | identical |
+| Supplementary Fig. S1 | `fate_mixture_controls.py` | 32,548 | identical |
+| Supplementary Fig. S3a | `fate_nadig_pairs.py` | 4,169 | identical |
+| Supplementary Fig. S3b | `fate_orion_matched.py` (and every array of `per_target.npz`), `fate_orion_matched2.py` | 225, 244 | identical |
+| Fig. 1b, S3b inputs | `orion_extract.py` over all 332 X-Atlas/Orion files (7,943,468 cells) | counts, control sums, index | identical |
+| | | per-group expression sums (`sums64.npy`, `phase_sums.npy`) | relative differences up to 1.7 × 10⁻⁷ |
+
+The expression sums of `orion_extract.py` are accumulated in single precision by each worker; the rerun grouped the
+332 files into 8 workers, while the stored aggregate was built in batches as the files were downloaded, so the order of
+additions differs and the single-precision rounding with it. To see whether this matters, `fate_orion_c1.py`,
+`fate_orion_matched.py` and `fate_orion_matched2.py` were rerun on the re-extracted aggregate: of 519 values, the largest
+relative difference was 2.9 × 10⁻⁶, and none changed at three significant digits, the precision the paper reports.
+
+The figure scripts `plot_fate_figs_v6.py` and `plot_fate_supp_v6.py`, run from this repository on the stored outputs,
+redrew Figures 1–5 and Supplementary Figures S1–S8 identically (PNG pixel-identical; PDF identical apart from the
+creation date).
