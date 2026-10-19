@@ -238,11 +238,10 @@ Orion data (`ORION_ROOT/PIE_x_atlas_orion/preprocessed/`: `meta.json`, `ctrl_mea
 On 2026-10-19 one analysis per figure, the three checks of the mixture estimator and the escape-fraction tool were
 rerun from this repository on the servers where the data sit, with the configuration above, and every output was
 compared value by value with the output the paper's numbers were taken from (`checks/compare_json.py`; relative
-tolerance 10⁻⁹, ignoring only the stored docstring). On 2026-10-20 every script added for the final version of
-the preprint was rerun the same way, with the arguments of its original run. The results are in `checks/README.md`.
-On 2026-10-20 the
-figure scripts of this repository redrew Figures 1–5 and Supplementary Figures S1–S8 of the preprint from the saved
-outputs; every PNG was pixel-identical and every PDF identical apart from its creation date.
+tolerance 10⁻⁹, ignoring only the stored docstring). On 2026-10-20 every script added for the final version of the
+preprint was rerun the same way, with the arguments of its original run, and the figure scripts redrew Figures 1–5
+and Supplementary Figures S1–S8 from the saved outputs (PNG pixel-identical; PDF identical apart from the creation
+date). The results are in `checks/README.md`.
 
 ## Notes
 
