@@ -178,13 +178,13 @@ arrays. Each script's docstring states its question, its inputs and its rules, a
 | Item | Extraction | Analysis |
 |---|---|---|
 | Fig. 1: depletion and arrest across contexts; Supplementary Table S1 | `pan_extract.py`, `pan_extract_guide.py`, `fate_budget_extract.py`, `orion_extract.py` | `pan_fate.py`, `feng_fate.py`, `fate_h1.py`, `fate_iu_cd4.py`, `fate_iu_pan.py`, `fate_maffa.py`, `fate_orion_c1.py`, `fate_leng.py`, `pan_library_norm.py` → `fate_c1_table.py` |
-| Fig. 2: two-component fits; Supplementary Table S6 | `pan_percell_own.py`, `k562gw_percell_own.py`, `cd4_percell_own.py`, `pan_percell_guideconf.py` | `fate_mixture.py`, `fate_mixture_more.py` (further contexts), `fate_rev_mixture.py` (two guides of one target, the two K562 screens, level of the silenced cells); recovery test `fate_mixture_calib.py`; guide purity `fate_mixture_guideconf.py` |
+| Fig. 2: two-component fits; Supplementary Table S2 | `pan_percell_own.py`, `k562gw_percell_own.py`, `cd4_percell_own.py`, `pan_percell_guideconf.py` | `fate_mixture.py`, `fate_mixture_more.py` (further contexts), `fate_rev_mixture.py` (two guides of one target, the two K562 screens, level of the silenced cells); recovery test `fate_mixture_calib.py`; guide purity `fate_mixture_guideconf.py` |
 | Fig. 3: high-residual share and dilution | (Fig. 2, Fig. 4 and Supplementary Fig. S4 extractions) | `fate_dilution_curve.py`, `fate_rev_dilution.py`, `fate_k562_repeat.py` |
-| Fig. 4: hESC–K562 comparison; Supplementary Tables S2, S2b | `pan_extract_guide.py`, `k562_samescale_extract.py`, `pan_extract_kdgroup.py`, `pan_extract_mixnull.py` | `fate_samescale.py`, `fate_dilution_model.py`, `fate_kdgroup.py`, `fate_selection_check.py`, `fate_rev_samescale.py` (symmetric silenced comparison, estimators, abundance bins), `fate_rev_mixnull.py` (mixed classification control) |
+| Fig. 4: hESC–K562 comparison; Supplementary Tables S3, S4 | `pan_extract_guide.py`, `k562_samescale_extract.py`, `pan_extract_kdgroup.py`, `pan_extract_mixnull.py` | `fate_samescale.py`, `fate_dilution_model.py`, `fate_kdgroup.py`, `fate_selection_check.py`, `fate_rev_samescale.py` (symmetric silenced comparison, estimators, abundance bins), `fate_rev_mixnull.py` (mixed classification control) |
 | Fig. 5a: direction with silenced cells | `pan_percell_expr.py` | `fate_c34_agree.py`, `fate_rev_dir_orion.py` |
-| Fig. 5b and Supplementary Fig. S4a–d: composition, within-cell change and selection; Supplementary Table S3 | `fate_budget_extract.py`, `pan_budget_extract.py`, `cd4_budget_extract.py`, `phase_decomp_extract.py`, `pan_extract_state.py` | `fate_budget.py`, `fate_budget_screens.py`, `phase_decomp.py`, `fate_rev_comp.py` (symmetric share and bounds), `fate_rev_state.py` (composition by pluripotency state in hESC) |
+| Fig. 5b and Supplementary Fig. S4a–d: composition, within-cell change and selection; Supplementary Table S5 | `fate_budget_extract.py`, `pan_budget_extract.py`, `cd4_budget_extract.py`, `phase_decomp_extract.py`, `pan_extract_state.py` | `fate_budget.py`, `fate_budget_screens.py`, `phase_decomp.py`, `fate_rev_comp.py` (symmetric share and bounds), `fate_rev_state.py` (composition by pluripotency state in hESC) |
 | Fig. 5c and Supplementary Fig. S4e: composition removal; null-perturbation control | `fate_vectors_export.py` | `fate_crosscontext.py`, `fate_c6_null.py` |
-| Fig. 5d–e: benchmark, raw and denoised; Supplementary Table S4 | `fate_vectors_export.py` | `fate_benchmark.py`, `fate_benchmark_denoised.py` |
+| Fig. 5d–e: benchmark, raw and denoised; Supplementary Table S6 | `fate_vectors_export.py` | `fate_benchmark.py`, `fate_benchmark_denoised.py` |
 | Supplementary Fig. S1: controls for the two-component test | (Fig. 2 extractions) | `fate_mixture_controls.py` |
 | Supplementary Fig. S2: time course | `fate_budget_extract.py` (with `FATE_TARGET_LIST` for the day-8 screen) | `fate_drepanos.py`, `fate_budget_screens.py`, `feng_time_response.py`, `fate_maffa.py` |
 | Supplementary Fig. S3: two further published comparisons | `fate_vectors_export.py`, `orion_extract.py` | `fate_nadig_pairs.py`, `fate_orion_matched.py`, `fate_orion_matched2.py` |
@@ -238,7 +238,9 @@ Orion data (`ORION_ROOT/PIE_x_atlas_orion/preprocessed/`: `meta.json`, `ctrl_mea
 On 2026-10-19 one analysis per figure, the three checks of the mixture estimator and the escape-fraction tool were
 rerun from this repository on the servers where the data sit, with the configuration above, and every output was
 compared value by value with the output the paper's numbers were taken from (`checks/compare_json.py`; relative
-tolerance 10⁻⁹, ignoring only the stored docstring). The results are in `checks/README.md`. On 2026-10-20 the
+tolerance 10⁻⁹, ignoring only the stored docstring). On 2026-10-20 every script added for the final version of
+the preprint was rerun the same way, with the arguments of its original run. The results are in `checks/README.md`.
+On 2026-10-20 the
 figure scripts of this repository redrew Figures 1–5 and Supplementary Figures S1–S8 of the preprint from the saved
 outputs; every PNG was pixel-identical and every PDF identical apart from its creation date.
 

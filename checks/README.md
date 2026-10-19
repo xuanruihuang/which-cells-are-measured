@@ -31,7 +31,7 @@ The added fields: `fate_samescale.py` and `fate_budget.py` were extended (an int
 guide-design negative control) after the stored outputs were written, so the rerun writes a few fields the stored
 outputs do not have. Every field present in both is identical.
 
-## Mixture estimator (Fig. 2, Supplementary Table S6; redesign notes §5.3, §6.4–6.6)
+## Mixture estimator (Fig. 2, Supplementary Table S2; redesign notes §5.3, §6.4–6.6)
 
 | Check | Script | Values compared | Result | Values seen |
 |---|---|---|---|---|
@@ -66,7 +66,7 @@ taken from: JSON with `compare_json.py`, arrays with an element-by-element compa
 |---|---|---|---|
 | Fig. 2d, e; silenced level; e against dependency | `fate_rev_mixture.py` | 6,062 | identical |
 | Fig. 3a–c | `fate_rev_dilution.py` | 312, and every array of the point file | identical |
-| Fig. 4b, e, f; Supplementary Table S2b | `fate_rev_samescale.py` | 4,036 | identical |
+| Fig. 4b, e, f; Supplementary Table S4 | `fate_rev_samescale.py` | 4,036 | identical |
 | Fig. 4, matched-set selection | `fate_selection_check.py` | 330 | identical |
 | Mixed classification control | `pan_extract_mixnull.py` (every array and the index) → `fate_rev_mixnull.py` | 1,807 | identical |
 | Fig. 5a, direction; Orion matched difference | `fate_rev_dir_orion.py` | 51 | identical |
