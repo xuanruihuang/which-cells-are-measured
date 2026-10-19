@@ -248,4 +248,8 @@ outputs; every PNG was pixel-identical and every PDF identical apart from its cr
   the authors' analysis log and are kept so that each script can be traced to the record it was written for. Figure
   numbers in docstrings are those of the draft the script was written for; the table above gives the preprint's.
 
+## Licence
+
+MIT (see `LICENSE`).
+
 Contact: huangxuanrui@u.nus.edu
