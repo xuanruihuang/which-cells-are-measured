@@ -88,3 +88,11 @@ relative difference was 2.9 × 10⁻⁶, and none changed at three significant d
 The figure scripts `plot_fate_figs_v6.py` and `plot_fate_supp_v6.py`, run from this repository on the stored outputs,
 redrew Figures 1–5 and Supplementary Figures S1–S8 identically (PNG pixel-identical; PDF identical apart from the
 creation date).
+
+## Version 2 (2026-10-26)
+
+See **Version 2** in the repository README: the rerun of the extraction behind Fig. 5 reproduced the K562 and RPE1
+count arrays exactly and the hESC cell numbers of every group (only stage-specific library sums differed, by at most
+1,426 UMIs); the figure scripts of this repository redrew the six figures and twelve supplementary figures of version 2
+pixel-identically; `make_supp_data1.py` reproduced Supplementary Data 1 byte-identically; `fate_v2_further_checks.py`
+reproduces Supplementary Table S2. The new analysis scripts were not rerun from the repository.

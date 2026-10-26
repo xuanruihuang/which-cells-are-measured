@@ -25,7 +25,9 @@ def sides(C, k, kind):
         t, c = (C["tot_g"], C["comp_g"]) if use_g else (C["tot_r"], C["comp_r"])
         v = t[k] if kind == "total" else t[k] - c[k]
     else:
-        v = C["kd_r"][k]
+        # guide-unit contexts with guide-half knocked-down vectors: that ground truth on guide halves only, like the
+        # total; no fallback to random halves (version 2, 2026-10-26)
+        v = C["kd_g"][k] if C["lab"] in GUIDE_CONTEXTS and np.isfinite(C["kd_g"]).any() else C["kd_r"][k]
     return None if not np.isfinite(v[0, 0]) else v
 
 

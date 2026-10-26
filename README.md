@@ -1,15 +1,15 @@
 # which-cells-are-measured
 
-Analysis code for the preprint *Perturbations change which cells are measured in single-cell CRISPR screens*
-(Xuanrui Huang, National University of Singapore).
-
-The version used for the preprint, 1.0.0, is archived on Zenodo: https://doi.org/10.5281/zenodo.23480448 (all
-versions: https://doi.org/10.5281/zenodo.23480447).
+Analysis code for the preprint *Escaping cells dilute CRISPR screen responses unequally across cell types* (Xuanrui
+Huang, National University of Singapore; version 2). Version 1 of the preprint, titled *Perturbations change which cells
+are measured in single-cell CRISPR screens*, used release 1.0.0, archived on Zenodo: https://doi.org/10.5281/zenodo.23480448
+(all versions: https://doi.org/10.5281/zenodo.23480447). The scripts added or changed for version 2 are listed under
+**Version 2** below.
 
 The repository has two parts:
 
 - **`escape_fraction/`**: a small standalone tool that estimates, for each perturbation, the fraction *e* of measured
-  cells that did not silence the target, and the dilution (1 − *e*)² it causes (Box 1, recommendation 1). It needs only
+  cells whose target was not effectively knocked down (the escape fraction), and the dilution (1 − *e*)² it causes (Box 1, recommendation 1). It needs only
   NumPy and SciPy and per-cell counts that any CRISPRi Perturb-seq screen provides.
 - **`code/`**: the scripts that produced the numbers in the paper. For release, only paths and imports were changed:
   input and output locations are command-line arguments or come from one configuration file, and the scripts import
@@ -19,15 +19,16 @@ The repository has two parts:
 
 ### What it estimates
 
-In a pooled CRISPRi screen, a perturbation's measured cells are a mixture: cells in which the target was silenced, and
-cells in which it was not (the guide did not act, the cell was assigned the wrong guide, or silenced cells were lost
-while unsilenced ones remained). Unsilenced cells carry almost none of the response, so a response measured on all
-cells is about (1 − *e*) times the silenced-cell response as a mean shift, and (1 − *e*)² times as a squared norm or
+In a pooled CRISPRi screen, a perturbation's measured cells are a mixture: knocked-down cells, and
+escaping cells, in which the target was not effectively knocked down (the guide acted weakly or not at all, the cell was
+assigned the wrong guide, or knocked-down cells were depleted while escaping ones remained). Escaping cells carry almost
+none of the response, so a response measured on all cells is about (1 − *e*) times the response of the knocked-down
+cells as a mean shift, and (1 − *e*)² times as a squared norm or
 cross-signal, the magnitude used in the paper. In the paper *e* is about 0.1 for non-essential targets and rises to
-0.2–0.5 for the most essential ones, depending on the context and the harvest day.
+0.2–0.5 for the most essential ones, depending on the cell type and the harvest day.
 
 The tool fits each perturbation's per-cell counts of its own target gene with two models, a uniform partial knockdown
-and a mixture of silenced cells with cells at control level, using a negative-binomial count model whose dispersion is
+and a mixture of knocked-down cells with cells at control level, using a negative-binomial count model whose dispersion is
 estimated from control cells. It reports *e* from the mixture, whether the mixture is preferred (BIC difference > 10),
 and a null fit on control cells thinned to half their counts, which should not prefer the mixture. The fitting code is
 the one that produced the paper's numbers (`code/fate_mixture.py`), copied unchanged.
@@ -80,8 +81,8 @@ One row per perturbation (tab-separated, `NA` where not computed):
 | `dbic`, `mixture_detected` | BIC(uniform) − BIC(mixture); mixture preferred when > 10 |
 | `dilution`, `log2_dilution` | (1 − *e*)², the factor by which escape scales a squared-norm or cross-signal magnitude measured on all cells; its log2 |
 | `reliable` | at least 150 cells (see below) |
-| `r_kd` | residual expression of the silenced cells, as a fraction of control level |
-| `residual` | mean survivor residual, Σ count ÷ Σ expected over all cells |
+| `r_kd` | remaining expression of the knocked-down cells, as a fraction of control level |
+| `residual` | remaining target expression of all measured cells, Σ count ÷ Σ expected |
 | `r_uniform` | knockdown level under the uniform model |
 | `nb_size`, `mean_control_expected` | negative-binomial size of the gene in controls; mean expected count per control cell |
 | `null_dbic`, `null_mixture` | the same BIC difference for thinned control cells; `TRUE` flags a gene the count model fits poorly |
@@ -89,15 +90,16 @@ One row per perturbation (tab-separated, `NA` where not computed):
 | `note` | why a perturbation was not fitted, or what limits its estimate |
 
 A perturbation is fitted when it has at least 30 cells and the gene's mean expected count per control cell is at least
-3; with fewer counts per cell the silenced and unsilenced groups cannot be separated. *e* is reported whether or not
+3; with fewer counts per cell the knocked-down and escaping groups cannot be separated. *e* is reported whether or not
 the mixture is preferred; when it is not, *e* is small or not identified and the dilution is close to 1.
 
 **How precise is *e*?** In the paper's recovery test (control cells with a known fraction kept and the rest thinned to
 20% of their counts; Methods, *Recovery test*), the median error of *e* was at most 0.013 for *e* between 0.1 and 0.7,
 with a 90% interval of about ±0.08 at 150 cells, ±0.04 at 400 cells and ±0.1–0.3 at 50 cells. The mixture was detected
-for about 80% of perturbations at *e* = 0.1 and 150 cells, and for about half at *e* = 0.9, where few silenced cells
-remain. The test assumes two populations with a fixed knockdown level; where knockdown varies continuously among
-silenced cells, the groups separate less well.
+for about 80% of perturbations at *e* = 0.1 and 150 cells, and for about half at *e* = 0.9, where few knocked-down cells
+remain. The test assumes two populations with a fixed knockdown level; where knockdown varies between cells, the
+escaping group also absorbs cells knocked down only partly (in the paper, one population thinned to a knockdown
+with a cell-to-cell standard deviation of 0.2 gave *e* of about 0.1).
 
 **Guide purity.** In the hESC screen, most of the baseline *e* came from cells with an uncertain guide call: in the third
 of cells with the highest purity, *e* was 0.03–0.05 for non-essential and moderately essential targets (0.16–0.19 over
@@ -144,7 +146,7 @@ control cells (`paper_fit.tsv`):
 | PARK7 | — | 8 | not fitted (fewer than 30 cells) | | | | |
 
 Reading it: for RPL21, a ribosomal protein that every line depends on, more than half of the cells measured at day 8
-had not silenced the target, so a response computed from all its cells is about one fifth of the silenced-cell
+had escaped knockdown, so a response computed from all its cells is about one fifth of the knocked-down-cell
 response in squared-norm units. For SET and HBZ the mixture is not preferred (BIC difference < 10), so their *e* is not
 evidence of escape. The small differences from the paper's column come from using 10,000 rather than all control cells
 for the dispersion and the control rate; on the full data the tool reproduces the paper's fits exactly (see
@@ -246,11 +248,40 @@ preprint was rerun the same way, with the arguments of its original run, and the
 and Supplementary Figures S1–S8 from the saved outputs (PNG pixel-identical; PDF identical apart from the creation
 date). The results are in `checks/README.md`.
 
+## Version 2
+
+The scripts below were added or changed for version 2 of the preprint (2026-10-26). Figure and table numbers in this
+section are those of version 2; the table under **Scripts by figure** gives version 1's.
+
+| Item (version 2) | Script | What it adds |
+|---|---|---|
+| Fig. 5: transfer model and benchmark; Supplementary Table S5 | `fate_vectors_export.py` (changed), `fate_benchmark.py`, `fate_benchmark_denoised.py` (changed), `fate_transfer_coef.py` (new), `fate_ci_bench_guidekd.py` (new); driver `run_v2_guidekd.sh` | the hESC knocked-down ground truth is now taken on guide halves (`kd_g`), like the all-cell ground truth; single-coefficient transfer model; intervals for the benchmark |
+| Supplementary Table S2, further checks 1 and 3 | `fate_v2_further_checks.py` (new) | escape fraction against cell number within strata; change in direction with the classification control subtracted |
+| Supplementary Table S2, further check 4 | `fate_v2_kd_depth.py` (new) | hESC–K562 ratio at similar knockdown depth |
+| Supplementary Table S2, further check 5 | `fate_drepanos_escape.py` (new) | per-day escape fraction in the K562 time course (not fittable: too few counts per cell) |
+| Supplementary Table S2, further check 2 | `fate_kdgroup.py` (unchanged; keys `Q1`, `Q1p`) | response of escaping cells relative to knocked-down cells |
+| Supplementary Data 1 | `make_supp_data1.py` (new) | escape fraction of every fitted perturbation, from the outputs of `fate_mixture.py` and `fate_mixture_more.py` |
+| Figures | `plot_fate_figs_v7.py` (Figs. 1–6), `plot_fate_supp_v7.py` (Supplementary Figs. S1–S12) | |
+
+`plot_fate_figs_v7.py <figdata> <v1 figdata> <v3 figdata> <v4 figdata> <out>` reads the folders described above, plus, in
+`<v4 figdata>`: `transfer_coef.json` (from `fate_transfer_coef.py`) and `bench_guidekd/` holding the four
+`w5_benchmark_denoised_<source>.json` files and `ci_bench.json` written by `run_v2_guidekd.sh`.
+`plot_fate_supp_v7.py` takes the same arguments.
+
+**Verification of version 2.** The extraction behind Fig. 5 had to be rerun (`run_v2_guidekd.sh`), because the arrays
+of 2026-10-18 had been removed. The rerun reproduced the K562 and RPE1 count arrays exactly; for hESC the cell numbers of
+every group were identical and only the library sums of single cell-cycle stages differed (largest difference 1,426
+UMIs), and the all-cell benchmark values were reproduced to the stored precision. The figure scripts of this repository
+redrew all six figures and twelve supplementary figures pixel-identically to those of the preprint, and
+`make_supp_data1.py` wrote Supplementary Data 1 byte-identically. `fate_v2_further_checks.py` reproduces the values of
+Supplementary Table S2 exactly. The new analysis scripts ran once on the servers; unlike version 1's, they were not rerun
+from this repository.
+
 ## Notes
 
 - Comments and `rules` strings carry labels such as "findings bm", "C5 W5", "redesign §5.3" or "check V3". They refer to
   the authors' analysis log and are kept so that each script can be traced to the record it was written for. Figure
-  numbers in docstrings are those of the draft the script was written for; the table above gives the preprint's.
+  numbers in docstrings are those of the draft the script was written for; the tables above give the preprint's.
 
 ## Licence
 

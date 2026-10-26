@@ -30,8 +30,10 @@ def essentiality(path):
 
 def load(d, lab):
     z = np.load("%s/%s_vectors.npz" % (d, lab), allow_pickle=True)
-    return dict(lab=lab, targets=[str(t) for t in z["targets"]], genes=[str(g) for g in z["genes"]],
-                **{k: z[k] for k in ("tot_r", "comp_r", "kd_r", "kdcomp_r", "tot_g", "comp_g")})
+    d = dict(lab=lab, targets=[str(t) for t in z["targets"]], genes=[str(g) for g in z["genes"]],
+             **{k: z[k] for k in ("tot_r", "comp_r", "kd_r", "kdcomp_r", "tot_g", "comp_g")})
+    d["kd_g"] = z["kd_g"] if "kd_g" in z.files else np.full_like(z["kd_r"], np.nan)
+    return d
 
 
 def mean_vector(C, k, kind):
@@ -41,7 +43,11 @@ def mean_vector(C, k, kind):
         t, c = (C["tot_g"], C["comp_g"]) if use_g else (C["tot_r"], C["comp_r"])
         v = t[k] if kind == "total" else t[k] - c[k]
     else:
-        v = C["kd_r"][k] if kind == "kd" else C["kd_r"][k] - C["kdcomp_r"][k]
+        # guide-unit contexts: knocked-down ground truth on guide halves, like the total (2026-10-26)
+        if kind == "kd" and C["lab"] in GUIDE_CONTEXTS and np.isfinite(C["kd_g"]).any():
+            v = C["kd_g"][k]                     # guide halves only, no fallback (2026-10-26)
+        else:
+            v = C["kd_r"][k] if kind == "kd" else C["kd_r"][k] - C["kdcomp_r"][k]
     return None if not np.isfinite(v[0, 0]) else v.mean(0)
 
 
