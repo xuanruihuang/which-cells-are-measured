@@ -1,10 +1,10 @@
 # which-cells-are-measured
 
 Analysis code for the preprint *Escaping cells dilute CRISPR screen responses unequally across cell types* (Xuanrui
-Huang, National University of Singapore; version 2). Version 1 of the preprint, titled *Perturbations change which cells
-are measured in single-cell CRISPR screens*, used release 1.0.0, archived on Zenodo: https://doi.org/10.5281/zenodo.23480448
-(all versions: https://doi.org/10.5281/zenodo.23480447). The scripts added or changed for version 2 are listed under
-**Version 2** below.
+Huang, National University of Singapore). Release 1.0.0, archived on Zenodo (https://doi.org/10.5281/zenodo.23480448; all
+versions: https://doi.org/10.5281/zenodo.23480447), was made for an earlier, unpublished draft titled *Perturbations
+change which cells are measured in single-cell CRISPR screens*. The scripts added or changed since then are listed
+under **Version 2** below.
 
 The repository has two parts:
 
@@ -244,14 +244,14 @@ On 2026-10-19 one analysis per figure, the three checks of the mixture estimator
 rerun from this repository on the servers where the data sit, with the configuration above, and every output was
 compared value by value with the output the paper's numbers were taken from (`checks/compare_json.py`; relative
 tolerance 10⁻⁹, ignoring only the stored docstring). On 2026-10-20 every script added for the final version of the
-preprint was rerun the same way, with the arguments of its original run, and the figure scripts redrew Figures 1–5
+earlier draft was rerun the same way, with the arguments of its original run, and the figure scripts redrew Figures 1–5
 and Supplementary Figures S1–S8 from the saved outputs (PNG pixel-identical; PDF identical apart from the creation
 date). The results are in `checks/README.md`.
 
 ## Version 2
 
-The scripts below were added or changed for version 2 of the preprint (2026-10-26). Figure and table numbers in this
-section are those of version 2; the table under **Scripts by figure** gives version 1's.
+The scripts below were added or changed for the preprint after release 1.0.0 (2026-10-26). Figure and table numbers in
+this section are those of the preprint; the table under **Scripts by figure** gives those of the earlier draft.
 
 | Item (version 2) | Script | What it adds |
 |---|---|---|
@@ -274,7 +274,7 @@ every group were identical and only the library sums of single cell-cycle stages
 UMIs), and the all-cell benchmark values were reproduced to the stored precision. The figure scripts of this repository
 redrew all six figures and twelve supplementary figures pixel-identically to those of the preprint, and
 `make_supp_data1.py` wrote Supplementary Data 1 byte-identically. `fate_v2_further_checks.py` reproduces the values of
-Supplementary Table S2 exactly. The new analysis scripts ran once on the servers; unlike version 1's, they were not rerun
+Supplementary Table S2 exactly. The new analysis scripts ran once on the servers; unlike those of release 1.0.0, they were not rerun
 from this repository.
 
 ## Notes

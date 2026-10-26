@@ -52,7 +52,7 @@ outputs do not have. Every field present in both is identical.
 The worked example was also run with `expected` columns instead of `library` (same *e* in every row) and with a
 `purity` column and `--min-purity`.
 
-## Scripts added for the final version of the preprint
+## Scripts added for the final version of the earlier draft
 
 `fate_rev_*.py`, `pan_extract_mixnull.py`, `pan_extract_state.py`, `fate_mixture_controls.py`, `fate_nadig_pairs.py`,
 `fate_orion_matched*.py`, `fate_k562_repeat.py`, `fate_selection_check.py` and `orion_extract.py` were copied into this
